@@ -37,8 +37,8 @@ def showUploadPage(request):
     return render_to_response("upload.html")
 
 def upload(request):
-    if request.method == "POST" and 'upload' in request.POST:
-        # get file
+    if request.method == "POST" and 'draw' in request.POST:
+        # 上传文件
         file = request.FILES.get("myfile",None) # Get Upload
         if not file:
             return HttpResponse("no files for upload!")
@@ -51,29 +51,19 @@ def upload(request):
         for chunk in file.chunks():
             destination.write(chunk)
         destination.close()
-        with open(os.path.join(path,file.name), mode='r', encoding = 'utf-8') as f:
-            c = f.read()
-        return HttpResponse(c)
-    elif request.method == "POST" and 'draw' in request.POST:
-        file = request.FILES.get("myfile",None) # Get Upload
-        if not file:
-            return HttpResponse("no files for upload!")
-        # make save path: uploaded file is saved in testdj/receive
-        path = "receive"
-        if not os.path.exists(path):
-            os.makedirs(path)
-        # save file: write in by chucks
-        destination=open(os.path.join(path,file.name),'wb')
-        for chunk in file.chunks():
-            destination.write(chunk)
-        destination.close()
-        with open(os.path.join(path,file.name), mode='r', encoding = 'utf-8') as f:
-            c = f.read()
-        #return HttpResponse(c)
+        #作图
         a=Data()
-        data=a.get_ping_data("app/1.txt")
+        print(file.name)
+        data=a.get_ping_data("receive/"+file.name)
         name=a.data_draw("ping", a=data)
-        return HttpResponse(name, content_type='image/svg')
+        #return HttpResponse(name, content_type='image/svg')
+        return render_to_response('upload.html', {'newimage': name})       
+    elif request.method == "POST" and 'photos' in request.POST:
+        path="static"  # insert the path to your directory   
+        s_list = os.listdir(path)   
+        img_list = [element for element in s_list if ".svg" in element]
+        print(img_list)
+        return render_to_response('upload.html', {'images': img_list}) 
 
 def showimg(request):
     imgs = models.mypicture.objects.all() # 查询导数据库所有图片
@@ -87,3 +77,9 @@ def showimg(request):
         print(i.photo)
     # 最后返回一下我们的展示网页，动态图片数据展示放进去
     return render(request, 'bbb.html', content)
+
+
+def gallery(request):
+    path="static"  # insert the path to your directory   
+    img_list =os.listdir(path)   
+    return render_to_response('upload.html', {'images': img_list})

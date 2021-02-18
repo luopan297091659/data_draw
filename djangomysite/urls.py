@@ -26,7 +26,7 @@ urlpatterns = [
     #path('hello/', views.hello),
     #path('', views.hello),
     #url(r'^$', views.hello),
-    #path('app/',views.register),
+    path('login/',views.register),
     path('app/', views.showUploadPage),
     path('uploadfile/', views.upload), 
     path('show/', views.showimg, name='photos'),

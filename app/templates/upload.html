@@ -1,24 +1,38 @@
-<!DOCTYPEhtml>
+<!DOCTYPE html>
 <htmllang="en">
-
 <head>
-    <meta charset="UTF-8">
-    <title>Upload Text</title>
+    <meta http-equiv="Content-Type" content="text/html;charset=utf-8">
+    <meta content="always" name="referrer">
+    <title>home page</title>
+    <link rel="shortcut icon" href="static/favicon2.ico" />
     {% load staticfiles %}
 </head>
-
+<script>
+    var newimage="rokid.png"
+</script>
 <body>
-<h1 align="center">数据处理</h1>
+<h1 align="center" style="font-family:times;color:blue">数据处理</h1>
 <form enctype="multipart/form-data" action="/uploadfile/" method="post">
+   <br/>
+   <br/>
    <input type="file" name="myfile"/>
    <br/>
-   <input type="submit" name='upload' value="upload"/>
-   <br/>
-   <input type="button" value="Click me" onclick="msg()" />
    <br/>
    <input type="submit" name="draw" value="画图"/>
+    <br/>
+    <br/>
+   <input type="submit" name="photos" value="图片列表"/>
 </form>
-<img src="{% static 'ping-2021-02-16-11-53-17.svg'%}">
-</body>
-
+<br/>
+<br/>
+<div class="if/else">
+    {% if newimage != Null %}
+        <p style="font-family:times;color:red">{{ newimage }} </p>
+        <embed id="embedSvg" type="image/svg+xml" src='/static/{{newimage}}'></embed>
+    {% endif %}
+</div>
+{% for image in images %}
+    <p style="font-family:times;color:red">{{ image }} </p>
+    <embed id="embedSvg" type="image/svg+xml" src='/static/{{image}}'></embed>
+{% endfor %}
 </html>

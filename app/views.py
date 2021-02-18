@@ -54,8 +54,8 @@ def upload(request):
         #作图
         a=Data()
         print(file.name)
-        data=a.get_ping_data("receive/"+file.name)
-        name=a.data_draw("ping", a=data)
+        data=a.get_file_data("receive/"+file.name)
+        name=a.data_draw(**data)
         #return HttpResponse(name, content_type='image/svg')
         return render_to_response('upload.html', {'newimage': name})       
     elif request.method == "POST" and 'photos' in request.POST:

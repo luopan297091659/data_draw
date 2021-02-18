@@ -2,8 +2,7 @@
 import pygal
 import time
 import re
-import os
-
+import os,xlrd,csv
 
 class Data(object):
     def get_ping_data(self, ping_data_file):
@@ -36,14 +35,42 @@ class Data(object):
                 pass
         return iperf_list
 
-    def data_draw(self, type, **kwargs):
+    def get_file_data(self, file):
+        data_dic={}
+        if "excel" in file or "xlsx" in file or "xls" in file:
+            workbook = xlrd.open_workbook(file)
+            sheet = workbook.sheet_by_index(0)
+            ncols = sheet.ncols
+            print(ncols,type(ncols))
+            for i in range(ncols):
+                cols = sheet.col_values(i)
+                k = cols[0]
+                del cols[0]
+                v = list(map(float, cols))
+                data_dic[k] = v
+        elif "csv" in file:
+            with open(file, encoding='utf-8') as f:
+                reader = csv.reader(f)
+                header = next(reader)
+                print(reader)
+                print(reader,type(reader))
+
+                for index,info in enumerate(reader):
+                    for i in range(len(header)):
+                        if header[i] not in data_dic.keys():
+                            data_dic[header[i]] = []
+                        else:
+                            data_dic[header[i]].append(float(info[i]))        
+        return data_dic
+
+    def data_net_draw(self, type, **kwargs):
         line_chart = pygal.Line()
         alist=[]
         for key, value in kwargs.items():
             alist.append(len(value))
         x=max(alist)
         line_chart.x_labels = map(str, range(0, x))
-        if type is 'ping':
+        if type == 'ping':
             title = 'ping 结果 单位：ms'
         else:
             title = 'iperf 结果 单位：Mbits/sec'
@@ -53,19 +80,26 @@ class Data(object):
         loacl_time=time.strftime("%Y-%m-%d-%H-%M-%S", time.localtime())
         name = type + '-'+ loacl_time + '.svg'
         file = 'static/' + name
-        line_chart.render_to_file(name)
-        '''
-        logfile = BuiltIn().get_variable_value('${LOG FILE}')
-        log_dir=os.path.dirname(logfile)
-        logger.info('</td></tr><tr><td colspan="3">'
-                  '<a href="{src}"><img src="{src}" width="1200px"></a>'
-                    .format(src=get_link_path(path, log_dir)), html=True)
-'''
+        line_chart.render_to_file(file)
         return name
 
+    def data_draw(self, **kwargs):
+        line_chart = pygal.Line()
+        alist=[]
+        for key, value in kwargs.items():
+            alist.append(len(value))
+        x=max(alist)
+        line_chart.x_labels = map(str, range(0, x))
+        for key, value in kwargs.items():
+            line_chart.add(key, list(map(float, value)))
+        loacl_time=time.strftime("%Y-%m-%d-%H-%M-%S", time.localtime())
+        name = loacl_time + '.svg'
+        file = 'static/' + name
+        line_chart.render_to_file(file)
+        return name
 
 if __name__ == '__main__':
     a=Data()
-    data=a.get_ping_data("1.txt")
-    a.data_draw("ping", a=data)
+    data=a.get_file_data("receive/1.csv")
+    print(data)
     

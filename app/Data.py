@@ -13,8 +13,6 @@ class Data(object):
         ping_list = []
         for i in match:
             ping_list.append(i[5:-3])
-        print(ping_list)
-        #res='{0}={1}'.format(ping_name,ping_list)
         return ping_list
 
     def get_iperf_data(self,iperf_data):
@@ -41,7 +39,6 @@ class Data(object):
             workbook = xlrd.open_workbook(file)
             sheet = workbook.sheet_by_index(0)
             ncols = sheet.ncols
-            print(ncols,type(ncols))
             for i in range(ncols):
                 cols = sheet.col_values(i)
                 k = cols[0]
@@ -52,9 +49,6 @@ class Data(object):
             with open(file, encoding='utf-8') as f:
                 reader = csv.reader(f)
                 header = next(reader)
-                print(reader)
-                print(reader,type(reader))
-
                 for index,info in enumerate(reader):
                     for i in range(len(header)):
                         if header[i] not in data_dic.keys():

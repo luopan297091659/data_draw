@@ -28,7 +28,7 @@
 <div class="if/else">
     {% if newimage != Null %}
         <p style="font-family:times;color:red">{{ newimage }} </p>
-        <embed id="embedSvg" type="image/svg+xml" src='/static/{{newimage}}'></embed>
+        <embed id="embedSvg" type="image/svg+xml" src='/static/{{newimage}}' width="70%" height="70%" ></embed>
     {% endif %}
 </div>
 {% for image in images %}

@@ -62,8 +62,8 @@ def upload(request):
         path="static"  # insert the path to your directory   
         s_list = os.listdir(path)   
         img_list = [element for element in s_list if ".svg" in element]
-        print(img_list)
-        return render_to_response('upload.html', {'images': img_list}) 
+        imgs_list=sorted(img_list,key=lambda x: os.path.getmtime(os.path.join(path, x)),reverse = True )
+        return render_to_response('upload.html', {'images': imgs_list[0:6]}) 
 
 def showimg(request):
     imgs = models.mypicture.objects.all() # 查询导数据库所有图片

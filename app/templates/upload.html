@@ -29,6 +29,7 @@
     {% if newimage != Null %}
         <a style="font-family:times;color:blue;font-size: 17px;" href='/static/{{ newimage }}'  download='/static/{{ newimage }}'>下载</a>
         <a style="font-family:times;color:red;font-size: 17px" href="/static/{{newimage}}">{{ newimage }} </a>
+        <br/>
         <embed id="embedSvg" type="image/svg+xml" src='/static/{{newimage}}' width="70%" height="70%" ></embed>
     {% endif %}
 </div>
